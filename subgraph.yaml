@@ -1,0 +1,35 @@
+specVersion: 0.0.4
+description: Subgraph for SplitPlugin
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: SplitPlugin
+    network: sepolia
+    source:
+      address: "0xec01fb99424c3e1557057758721050200fa40710"
+      abi: SplitPlugin
+      startBlock: 4300000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - SplitConfig
+        - SplitExecution
+        - AutomationSetting
+      abis:
+        - name: SplitPlugin
+          file: ./abis/SplitPlugin.json
+      eventHandlers:
+        - event: SplitConfigCreated(indexed address,indexed uint256)
+          handler: handleSplitConfigCreated
+        - event: SplitExecuted(indexed uint256)
+          handler: handleSplitExecuted
+        - event: SplitConfigFailed(indexed uint256,bytes)
+          handler: handleSplitConfigFailed
+        - event: SplitConfigDeleted(indexed uint256)
+          handler: handleSplitConfigDeleted
+        - event: AutomationSwitched(indexed uint256,bool)
+          handler: handleAutomationSwitched
+      file: ./src/mapping.ts

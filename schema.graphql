@@ -1,0 +1,49 @@
+type SplitConfig @entity(immutable: false) {
+  id: ID! # Format: `${configIndex}`
+  dao: Bytes!
+  plugin: Bytes!
+  configId: Bytes!
+  creator: Bytes!
+  token: Bytes!
+  splitAddresses: [Bytes!]!
+  percentages: [BigInt!]!
+  minTokenAmount: BigInt!
+  automated: Boolean!
+  isSplitEnabled: Boolean!
+  createdAt: BigInt!
+  updatedAt: BigInt
+  executions: [SplitExecution!]! @derivedFrom(field: "config")
+  failures: [SplitFailure!]! @derivedFrom(field: "config")
+}
+
+type SplitExecution @entity(immutable: true) {
+  id: ID! # Format: `${txHash}-${logIndex}`
+  dao: Bytes!
+  plugin: Bytes!
+  configId: Bytes!
+  config: SplitConfig!
+  token: Bytes!
+  recipients: [Bytes!]!
+  amounts: [BigInt!]!
+  timestamp: BigInt!
+  txHash: Bytes!
+}
+
+type SplitFailure @entity(immutable: true) {
+  id: ID! # Format: `${txHash}-${logIndex}`
+  dao: Bytes!
+  plugin: Bytes!
+  configId: Bytes!
+  config: SplitConfig!
+  reason: Bytes!
+  timestamp: BigInt!
+  txHash: Bytes!
+}
+
+type AutomationSetting @entity(immutable: false) {
+  id: ID!
+  dao: Bytes!
+  plugin: Bytes!
+  configId: Bytes!
+  automated: Boolean!
+}
